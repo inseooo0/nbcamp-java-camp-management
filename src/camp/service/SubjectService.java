@@ -1,5 +1,6 @@
 package camp.service;
 
+import camp.domain.Student;
 import camp.domain.Subject;
 import camp.domain.SubjectType;
 import camp.repository.SubjectRepository;
@@ -94,5 +95,35 @@ public class SubjectService {
         }
 
         return subjectSet;
+    }
+
+    // 과목 이름을 입력받아 과목 객체 반환
+    // 수강 중인 과목 이름을 입력 받을 때까지 반복
+    public Subject inputSubject(Student student) {
+        List<Subject> subjectList = student.getSubjectList();
+        System.out.print(student.getStudentName() + " 수강생이 수강 중인 과목 : ");
+        printSubjectName(subjectList);
+
+        Subject subject;
+        while (true) {
+            System.out.print("점수를 관리할 과목을 입력해주세요 : ");
+            String subjectName = sc.nextLine();
+
+            subject = subjectRepository.findByName(subjectName);
+
+            // 과목 이름 유효성 검사
+            if (subject == null) {
+                System.out.println(subjectName + "은(는) 존재하지 않는 과목입니다. 다시 입력해주세요.");
+                continue;
+            }
+
+            // 과목 수강 여부 유효성 검사
+            if (!subjectList.contains(subject)) {
+                System.out.println(subjectName + "은(는) 수강 중인 과목이 아닙니다. 다시 입력해주세요.");
+            } else {
+                break;
+            }
+        }
+        return subject;
     }
 }

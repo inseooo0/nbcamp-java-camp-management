@@ -1,9 +1,6 @@
 package camp.service;
 
-import camp.domain.Status;
-import camp.domain.Student;
-import camp.domain.Subject;
-import camp.domain.SubjectType;
+import camp.domain.*;
 import camp.repository.StudentRepository;
 
 import java.util.*;
@@ -134,6 +131,20 @@ public class StudentService {
         scoreService.removeById(student.getStudentId());
 
         System.out.println("수강생 삭제 완료");
+    }
+
+    // 수강생의 과목별 시험 회차 및 점수 등록
+    public void createScore() {
+        // 관리할 수강생 입력
+        Student student = getStudent();
+
+        // 존재하지 않는 수강생 Id인 경우 종료
+        if (student == null) return;
+
+        // 과목 입력
+        Subject subject = subjectService.inputSubject(student);
+
+        scoreService.inputAndSaveScore(subject, student);
     }
 
     // 수강생의 ID를 입력받아 수강생 객체를 반환

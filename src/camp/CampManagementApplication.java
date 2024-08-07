@@ -102,7 +102,7 @@ public class CampManagementApplication {
             int input = sc.nextInt();
 
             switch (input) {
-                case 1 -> createScore(); // 수강생의 과목별 시험 회차 및 점수 등록
+                case 1 -> studentService.createScore(); // 수강생의 과목별 시험 회차 및 점수 등록
                 case 2 -> updateRoundScoreBySubject(); // 수강생의 과목별 회차 점수 수정
                 case 3 -> inquireRoundGradeBySubject(); // 수강생의 특정 과목 회차별 등급 조회
                 case 4 -> inquireAvgGradeBySubject(); //수강생의 과목별 평균 등급 조회
@@ -138,56 +138,6 @@ public class CampManagementApplication {
                 }
             }
         }
-    }
-
-    // 수강생의 과목별 시험 회차 및 점수 등록
-    private static void createScore() {
-        // 관리할 수강생 입력
-        Student student = getStudent();
-
-        // 존재하지 않는 수강생 Id인 경우 종료
-        if (student == null) return;
-
-        // 과목 입력
-        Subject subject = inputSubject(student);
-
-        // 회차 입력
-        int round;
-        while (true) {
-            System.out.print("시험 회차를 입력해주세요(1 ~ 10): ");
-            round = sc.nextInt();
-
-            // 회차 범위 유효성 검사
-            if (round < 1 || round > 10) {
-                System.out.println("시험 회차의 범위는 1 ~ 10 입니다. 다시 입력해주세요.");
-                continue;
-            }
-            // 중복 검사
-            Score score = scoreRepository.findOne(student.getStudentId(), subject.getSubjectId(), round);
-            if (score == null) {
-                break;
-            } else {
-                System.out.println("해당 회차의 점수는 이미 등록되어 있습니다. 다시 입력해주세요.");
-            }
-        }
-
-        // 점수 입력
-        int score;
-        while (true) {
-            System.out.print("시험 점수를 입력해주세요(0 ~ 100): ");
-            score = sc.nextInt();
-
-            // 회차 범위 유효성 검사
-            if (score < 0 || score > 100) {
-                System.out.println("시험 점수의 범위는 0 ~ 100 입니다. 다시 입력해주세요.");
-            } else {
-                break;
-            }
-        }
-
-        // 점수 등록
-        scoreRepository.save(new Score(student, subject, round, score));
-        System.out.println("\n점수 등록 성공!");
     }
 
     // 수강생의 과목별 회차 점수 수정
@@ -371,79 +321,6 @@ public class CampManagementApplication {
             System.out.println("존재하지 않는 수강생 ID 입니다.");
         }
         return student;
-    }
-
-    // 수강생 객체를 입력받아 수강생 정보를 출력
-    private static void printStudent(Student savedStudent) {
-        System.out.println("===================================");
-        System.out.println("수강생 이름 : " + savedStudent.getStudentName());
-        System.out.println("수강생 ID : " + savedStudent.getStudentId());
-        System.out.println("수강생 상태 : " + savedStudent.getStatus().name());
-        System.out.print("수강 목록 : ");
-        List<Subject> subjectList = savedStudent.getSubjectList();
-        printSubjectName(subjectList);
-        System.out.print("수강 목록 ID : ");
-        printSubjectId(subjectList);
-    }
-
-    // 수강 과목의 이름을 입력받아 입력 받은 과목 객체 리스트를 반환
-    private static Set<Subject> inputSubject(SubjectType type) {
-        Set<Subject> subjectSet;
-        String subjectInput;
-        String description = type.getDescription();
-        int required = type.getRequired();
-
-        while (true) {
-            subjectSet = new HashSet<>();
-            System.out.println(description + " 최소 " + required + "개 이상 입력해주세요(쉼표로 구분)");
-
-            // 과목 이름 출력
-            List<Subject> exampleSubjectList = subjectRepository.findByType(type);
-            System.out.print(description + " 목록 : ");
-            printSubjectName(exampleSubjectList);
-
-            // 과목 입력
-            System.out.print(description + " 입력 : ");
-            subjectInput = sc.nextLine();
-
-            // 유효성 검사 (입력 개수 확인)
-            if (subjectInput.split(",").length < required) {
-                System.out.println(description + "은 최소 " + required + "개 이상 입력해야 합니다. 다시 입력해주세요.");
-                continue;
-            }
-
-            // 유효성 검사 (과목 이름 확인)
-            List<String> subjectNames = Arrays.stream(subjectInput.split(","))
-                    .map(s -> s.stripLeading().stripTrailing()).toList(); // 문자열 앞뒤 공백 제거
-
-            boolean flag = false;
-            for (String subjectName : subjectNames) {
-                Subject subject = subjectRepository.findByName(subjectName);
-                if (subject == null) {
-                    System.out.println(subjectName + "은(는) 존재하지 않는 과목입니다. 다시 입력해주세요.");
-                    flag = true;
-                    break;
-                }
-                if (subject.getSubjectType() != type) {
-                    System.out.println(subjectName + "은(는) " + subject.getSubjectType().getDescription() + "입니다. " + description + "을 입력해주세요.");
-                    flag = true;
-                    break;
-                }
-                subjectSet.add(subject);
-            }
-
-            if (flag) continue;
-
-            // 유효성 검사 (중복된 과목 확인)
-            if (subjectSet.size() < required) {
-                System.out.println(description + "은 최소 " + required + "개 이상 입력해야 합니다. 다시 입력해주세요.");
-                continue;
-            }
-
-            break;
-        }
-
-        return subjectSet;
     }
 
     // 과목 리스트를 입력 받아 과목 이름을 출력
