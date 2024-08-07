@@ -144,7 +144,23 @@ public class StudentService {
         // 과목 입력
         Subject subject = subjectService.inputSubject(student);
 
-        scoreService.inputAndSaveScore(subject, student);
+        // 회차, 점수 입력 및 저장
+        scoreService.inputAndSaveScore(student, subject);
+    }
+
+    // 수강생의 과목별 회차 점수 수정
+    public void updateRoundScoreBySubject() {
+        // 관리할 수강생 입력
+        Student student = getStudent();
+
+        // 존재하지 않는 수강생 Id인 경우 종료
+        if (student == null) return;
+
+        // 과목 입력
+        Subject subject = subjectService.inputSubject(student);
+
+        // 점수 수정
+        scoreService.updateScore(student, subject);
     }
 
     // 수강생의 ID를 입력받아 수강생 객체를 반환

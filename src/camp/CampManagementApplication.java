@@ -103,7 +103,7 @@ public class CampManagementApplication {
 
             switch (input) {
                 case 1 -> studentService.createScore(); // 수강생의 과목별 시험 회차 및 점수 등록
-                case 2 -> updateRoundScoreBySubject(); // 수강생의 과목별 회차 점수 수정
+                case 2 -> studentService.updateRoundScoreBySubject(); // 수강생의 과목별 회차 점수 수정
                 case 3 -> inquireRoundGradeBySubject(); // 수강생의 특정 과목 회차별 등급 조회
                 case 4 -> inquireAvgGradeBySubject(); //수강생의 과목별 평균 등급 조회
                 case 5 -> inquireAvgGradeByStatus(); // 특정 상태 수강생들의 필수 과목 평균 등급 조회
@@ -138,61 +138,6 @@ public class CampManagementApplication {
                 }
             }
         }
-    }
-
-    // 수강생의 과목별 회차 점수 수정
-    private static void updateRoundScoreBySubject() {
-        // 관리할 수강생 입력
-        Student student = getStudent();
-
-        // 존재하지 않는 수강생 Id인 경우 종료
-        if (student == null) return;
-
-        // 과목 입력
-        Subject subject = inputSubject(student);
-
-        // 회차 입력
-        int round;
-        Score score;
-        while (true) {
-            System.out.print("시험 회차를 입력해주세요(1 ~ 10): ");
-            round = sc.nextInt();
-
-            // 회차 범위 유효성 검사
-            if (round < 1 || round > 10) {
-                System.out.println("시험 회차의 범위는 1 ~ 10 입니다. 다시 입력해주세요.");
-                continue;
-            }
-            // 중복 검사
-            score = scoreRepository.findOne(student.getStudentId(), subject.getSubjectId(), round);
-            if (score != null) {
-                break;
-            } else {
-                System.out.println("해당 회차의 점수는 등록된 기록이 없습니다. 다시 입력해주세요.");
-            }
-        }
-
-        // 점수 입력
-        int newScore;
-        while (true) {
-            System.out.print("수정할 시험 점수를 입력해주세요(0 ~ 100): ");
-            newScore = sc.nextInt();
-
-            // 회차 범위 유효성 검사
-            if (newScore < 0 || newScore > 100) {
-                System.out.println("시험 점수의 범위는 0 ~ 100 입니다. 다시 입력해주세요.");
-            } else {
-                break;
-            }
-        }
-
-        // 점수 수정
-        score.setScore(newScore);
-
-        // 수정 사항 출력
-        System.out.println("\n시험 점수를 수정합니다...");
-        System.out.println(student.getStudentName() + " 수강생의 " + subject.getSubjectName()
-                + " 과목 " + round + "회차 점수 " + newScore + "점으로 수정 성공!");
     }
 
     // 수강생의 특정 과목 회차별 등급 조회
