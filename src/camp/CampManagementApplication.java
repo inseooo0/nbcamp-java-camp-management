@@ -75,7 +75,7 @@ public class CampManagementApplication {
             switch (input) {
                 case 1 -> studentService.createStudent(); // 수강생 등록
                 case 2 -> displayStudentInquiry(); // 수강생 목록 조회
-                case 3 -> updateStudentStatus(); // 수강생 상태 수정
+                case 3 -> studentService.updateStudentStatus(); // 수강생 상태 수정
                 case 4 -> deleteStudent(); //수강생 삭제
                 case 5 -> flag = false; // 메인 화면 이동
                 default -> {
@@ -138,31 +138,6 @@ public class CampManagementApplication {
                 }
             }
         }
-    }
-
-    // 수강생 상태 수정
-    private static void updateStudentStatus() {
-        // 수정할 수강생 입력
-        Student student = getStudent();
-
-        // 존재하지 않는 Id인 경우 종료
-        if (student == null) return;
-
-        // 수강생 상태 입력받아 저장
-        Status status;
-        while (true) {
-            System.out.print("수정할 수강생의 상태를 입력해주세요(GREEN, YELLOW, RED) : ");
-            String statusString = sc.next();
-            sc.nextLine(); // 입력 버퍼 비우기
-            try {
-                status = Status.valueOf(statusString.toUpperCase());
-                break;
-            } catch (Exception e) {
-                System.out.println("수강생의 상태는 Green, Yellow, Red 중 하나여야 합니다. 다시 입력해주세요.");
-            }
-        }
-        student.setStatus(status);
-        System.out.println("수강생 상태 수정 성공!\n");
     }
 
     // 수강생 삭제
