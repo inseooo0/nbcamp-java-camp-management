@@ -76,7 +76,7 @@ public class CampManagementApplication {
                 case 1 -> studentService.createStudent(); // 수강생 등록
                 case 2 -> displayStudentInquiry(); // 수강생 목록 조회
                 case 3 -> studentService.updateStudentStatus(); // 수강생 상태 수정
-                case 4 -> deleteStudent(); //수강생 삭제
+                case 4 -> studentService.deleteStudent(); //수강생 삭제
                 case 5 -> flag = false; // 메인 화면 이동
                 default -> {
                     System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
@@ -138,23 +138,6 @@ public class CampManagementApplication {
                 }
             }
         }
-    }
-
-    // 수강생 삭제
-    private static void deleteStudent() {
-        // 삭제할 수강생 입력
-        Student student = getStudent();
-
-        // 존재하지 않는 Id인 경우 종료
-        if (student == null) return;
-
-        // repository 에서 수강생 삭제
-        studentRepository.removeById(student.getStudentId());
-
-        // 수강생의 점수 삭제
-        scoreRepository.removeById(student.getStudentId());
-
-        System.out.println("수강생 삭제 완료");
     }
 
     // 수강생의 과목별 시험 회차 및 점수 등록

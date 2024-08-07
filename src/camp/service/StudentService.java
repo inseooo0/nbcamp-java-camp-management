@@ -13,6 +13,7 @@ public class StudentService {
     private StudentRepository studentRepository = new StudentRepository();
     private Scanner sc = new Scanner(System.in);
     private SubjectService subjectService = new SubjectService(); // Service가 다른 Service를 참조 (순환 참조 주의)
+    private ScoreService scoreService = new ScoreService(); // Service가 다른 Service를 참조 (순환 참조 주의)
 
     // 수강생 등록
     public void createStudent() {
@@ -116,6 +117,23 @@ public class StudentService {
         }
         student.setStatus(status);
         System.out.println("수강생 상태 수정 성공!\n");
+    }
+
+    // 수강생 삭제
+    public void deleteStudent() {
+        // 삭제할 수강생 입력
+        Student student = getStudent();
+
+        // 존재하지 않는 Id인 경우 종료
+        if (student == null) return;
+
+        // repository 에서 수강생 삭제
+        studentRepository.removeById(student.getStudentId());
+
+        // 수강생의 점수 삭제
+        scoreService.removeById(student.getStudentId());
+
+        System.out.println("수강생 삭제 완료");
     }
 
     // 수강생의 ID를 입력받아 수강생 객체를 반환

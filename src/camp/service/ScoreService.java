@@ -6,5 +6,7 @@ public class ScoreService {
 
     private ScoreRepository scoreRepository = new ScoreRepository();
 
-
+    public void removeById(String studentId) {
+        scoreRepository.removeById(studentId);
+    }
 }
