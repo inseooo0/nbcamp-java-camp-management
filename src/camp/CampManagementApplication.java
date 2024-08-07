@@ -130,7 +130,7 @@ public class CampManagementApplication {
 
             switch (input) {
                 case 1 -> studentService.inquireStudent(); // 수강생 전체 목록 조회
-                case 2 -> inquireStudentByStatus(); // 상태별 수강생 목록 조회
+                case 2 -> studentService.inquireStudentByStatus(); // 상태별 수강생 목록 조회
                 case 3 -> flag = false; // 메인 화면 이동
                 default -> {
                     System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
@@ -138,21 +138,6 @@ public class CampManagementApplication {
                 }
             }
         }
-    }
-
-    // 상태별 수강생 목록 조회
-    private static void inquireStudentByStatus() {
-        System.out.println("\n상태별 수강생 목록을 조회합니다...");
-        Status[] statuses = Status.values();
-        for (Status status : statuses) {
-            System.out.println("\n" + status.name() + " 상태 수강생 목록");
-            System.out.println("===================================");
-            List<Student> students = studentRepository.findByStatus(status);
-            for (Student student : students) {
-                System.out.println(student);
-            }
-        }
-        System.out.println("\n상태별 수강생 목록 조회 성공!");
     }
 
     // 수강생 상태 수정

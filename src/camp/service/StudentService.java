@@ -77,4 +77,19 @@ public class StudentService {
         System.out.print("수강 목록 ID : ");
         subjectService.printSubjectId(subjectList);
     }
+
+    // 상태별 수강생 목록 조회
+    public void inquireStudentByStatus() {
+        System.out.println("\n상태별 수강생 목록을 조회합니다...");
+        Status[] statuses = Status.values();
+        for (Status status : statuses) {
+            System.out.println("\n" + status.name() + " 상태 수강생 목록");
+            System.out.println("===================================");
+            List<Student> students = studentRepository.findByStatus(status);
+            for (Student student : students) {
+                System.out.println(student);
+            }
+        }
+        System.out.println("\n상태별 수강생 목록 조회 성공!");
+    }
 }
