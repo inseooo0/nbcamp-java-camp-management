@@ -129,7 +129,7 @@ public class CampManagementApplication {
             int input = sc.nextInt();
 
             switch (input) {
-                case 1 -> inquireStudent(); // 수강생 전체 목록 조회
+                case 1 -> studentService.inquireStudent(); // 수강생 전체 목록 조회
                 case 2 -> inquireStudentByStatus(); // 상태별 수강생 목록 조회
                 case 3 -> flag = false; // 메인 화면 이동
                 default -> {
@@ -138,17 +138,6 @@ public class CampManagementApplication {
                 }
             }
         }
-    }
-
-    // 수강생 전체 목록 조회
-    private static void inquireStudent() {
-        System.out.println("\n수강생 목록을 조회합니다...");
-        System.out.println("===================================");
-        List<Student> studentList = studentRepository.findAll();
-        for (Student student : studentList) {
-            System.out.println(student);
-        }
-        System.out.println("\n수강생 목록 조회 성공!");
     }
 
     // 상태별 수강생 목록 조회

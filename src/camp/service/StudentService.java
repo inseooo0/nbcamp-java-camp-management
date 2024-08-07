@@ -54,6 +54,17 @@ public class StudentService {
         System.out.println("수강생 등록 성공!\n");
     }
 
+    // 수강생 전체 목록 조회
+    public void inquireStudent() {
+        System.out.println("\n수강생 목록을 조회합니다...");
+        System.out.println("===================================");
+        List<Student> studentList = studentRepository.findAll();
+        for (Student student : studentList) {
+            System.out.println(student);
+        }
+        System.out.println("\n수강생 목록 조회 성공!");
+    }
+
     // 수강생 객체를 입력받아 수강생 정보를 출력
     public void printStudent(Student savedStudent) {
         System.out.println("===================================");
