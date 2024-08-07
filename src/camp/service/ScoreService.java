@@ -5,6 +5,7 @@ import camp.domain.Student;
 import camp.domain.Subject;
 import camp.repository.ScoreRepository;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class ScoreService {
@@ -98,5 +99,17 @@ public class ScoreService {
         System.out.println("\n시험 점수를 수정합니다...");
         System.out.println(student.getStudentName() + " 수강생의 " + subject.getSubjectName()
                 + " 과목 " + round + "회차 점수 " + newScore + "점으로 수정 성공!");
+    }
+
+    public void printScore(Student student, Subject subject) {
+        // 과목 회차별 등급 출력
+        List<Score> scoreList = scoreRepository.find(student.getStudentId(), subject.getSubjectId());
+        for (Score score : scoreList) {
+            System.out.println("회차 = " + score.getRound());
+            System.out.println("등급 = " + score.getGrade() + "\n");
+        }
+
+        System.out.println(student.getStudentName() + " 수강생의 "
+                + subject.getSubjectName() + " 과목 등급 조회 성공!");
     }
 }

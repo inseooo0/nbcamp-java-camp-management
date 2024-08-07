@@ -104,7 +104,7 @@ public class CampManagementApplication {
             switch (input) {
                 case 1 -> studentService.createScore(); // 수강생의 과목별 시험 회차 및 점수 등록
                 case 2 -> studentService.updateRoundScoreBySubject(); // 수강생의 과목별 회차 점수 수정
-                case 3 -> inquireRoundGradeBySubject(); // 수강생의 특정 과목 회차별 등급 조회
+                case 3 -> studentService.inquireRoundGradeBySubject(); // 수강생의 특정 과목 회차별 등급 조회
                 case 4 -> inquireAvgGradeBySubject(); //수강생의 과목별 평균 등급 조회
                 case 5 -> inquireAvgGradeByStatus(); // 특정 상태 수강생들의 필수 과목 평균 등급 조회
                 case 6 -> flag = false; // 메인 화면 이동
@@ -138,28 +138,6 @@ public class CampManagementApplication {
                 }
             }
         }
-    }
-
-    // 수강생의 특정 과목 회차별 등급 조회
-    private static void inquireRoundGradeBySubject() {
-        // 조회할 수강생 입력
-        Student student = getStudent();
-
-        // 존재하지 않는 수강생 Id인 경우 종료
-        if (student == null) return;
-
-        // 과목 입력
-        Subject subject = inputSubject(student);
-
-        // 과목 회차별 등급 출력
-        List<Score> scoreList = scoreRepository.find(student.getStudentId(), subject.getSubjectId());
-        for (Score score : scoreList) {
-            System.out.println("회차 = " + score.getRound());
-            System.out.println("등급 = " + score.getGrade() + "\n");
-        }
-
-        System.out.println(student.getStudentName() + " 수강생의 "
-                + subject.getSubjectName() + " 과목 등급 조회 성공!");
     }
 
     // 수강생의 과목별 평균 등급 조회
@@ -280,19 +258,5 @@ public class CampManagementApplication {
         }
         System.out.println();
     }
-
-    // 과목 리스트를 입력 받아 과목 ID를 출력
-    private static void printSubjectId(List<Subject> subjectList) {
-        Iterator<Subject> iterator = subjectList.iterator();
-        while (iterator.hasNext()) {
-            Subject subject = iterator.next();
-            System.out.print(subject.getSubjectId());
-            if (iterator.hasNext()) {
-                System.out.print(", ");
-            }
-        }
-        System.out.println();
-    }
-
 
 }
