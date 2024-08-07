@@ -1,6 +1,12 @@
 package camp;
 
-import camp.model.*;
+import camp.domain.*;
+import camp.repository.ScoreRepository;
+import camp.repository.StudentRepository;
+import camp.repository.SubjectRepository;
+import camp.service.ScoreService;
+import camp.service.StudentService;
+import camp.service.SubjectService;
 
 import java.util.*;
 
@@ -13,6 +19,11 @@ public class CampManagementApplication {
     private static SubjectRepository subjectRepository = new SubjectRepository();
     private static StudentRepository studentRepository = new StudentRepository();
     private static ScoreRepository scoreRepository = new ScoreRepository();
+
+    // service
+    private static StudentService studentService = new StudentService();
+    private static SubjectService subjectService = new SubjectService();
+    private static ScoreService scoreService = new ScoreService();
 
     public static void main(String[] args) {
         try {
@@ -62,7 +73,7 @@ public class CampManagementApplication {
             int input = sc.nextInt();
 
             switch (input) {
-                case 1 -> createStudent(); // 수강생 등록
+                case 1 -> studentService.createStudent(); // 수강생 등록
                 case 2 -> displayStudentInquiry(); // 수강생 목록 조회
                 case 3 -> updateStudentStatus(); // 수강생 상태 수정
                 case 4 -> deleteStudent(); //수강생 삭제
@@ -127,46 +138,6 @@ public class CampManagementApplication {
                 }
             }
         }
-    }
-
-    // 수강생 등록
-    private static void createStudent() {
-        System.out.println("\n수강생을 등록합니다...");
-
-        // 수강생 이름 입력받아 저장
-        System.out.print("수강생 이름 입력: ");
-        String studentName = sc.next();
-        Student student = new Student(studentName);
-
-        // 수강생 상태 입력받아 저장
-        Status status;
-        while (true) {
-            System.out.print("수강생의 상태를 입력해주세요(GREEN, YELLOW, RED) : ");
-            String statusString = sc.next();
-            sc.nextLine(); // 입력 버퍼 비우기
-            try {
-                status = Status.valueOf(statusString.toUpperCase());
-                break;
-            } catch (Exception e) {
-                System.out.println("수강생의 상태는 Green, Yellow, Red 중 하나여야 합니다. 다시 입력해주세요.");
-            }
-        }
-        student.setStatus(status);
-
-        // 수강 과목 입력
-        Set<Subject> mandatoryList = inputSubject(SubjectType.MANDATORY);
-        Set<Subject> choiceList = inputSubject(SubjectType.CHOICE);
-
-        // 수강 과목 저장
-        student.getSubjectList().addAll(mandatoryList);
-        student.getSubjectList().addAll(choiceList);
-
-        // 수강생 인스턴스 저장
-        Student savedStudent = studentRepository.save(student);
-
-        // 저장한 수강생 정보 출력
-        printStudent(savedStudent);
-        System.out.println("수강생 등록 성공!\n");
     }
 
     // 수강생 전체 목록 조회

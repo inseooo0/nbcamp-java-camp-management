@@ -1,4 +1,4 @@
-package camp.model;
+package camp.domain;
 
 import java.util.ArrayList;
 import java.util.List;

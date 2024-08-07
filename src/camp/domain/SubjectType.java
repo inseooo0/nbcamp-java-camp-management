@@ -1,4 +1,4 @@
-package camp.model;
+package camp.domain;
 
 public enum SubjectType {
     MANDATORY("필수 과목", 3), CHOICE("선택 과목", 2);

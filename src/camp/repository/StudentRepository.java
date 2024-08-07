@@ -1,4 +1,7 @@
-package camp.model;
+package camp.repository;
+
+import camp.domain.Status;
+import camp.domain.Student;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package camp.model;
+package camp.domain;
 
 
 public class Score {

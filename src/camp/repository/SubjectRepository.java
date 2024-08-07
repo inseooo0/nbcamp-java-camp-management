@@ -1,4 +1,7 @@
-package camp.model;
+package camp.repository;
+
+import camp.domain.Subject;
+import camp.domain.SubjectType;
 
 import java.util.ArrayList;
 import java.util.List;
