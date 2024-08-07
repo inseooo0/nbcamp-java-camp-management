@@ -38,7 +38,7 @@ public class SubjectService {
     }
 
     // 수강 과목의 이름을 입력받아 입력 받은 과목 객체 리스트를 반환
-    public Set<Subject> inputSubject(SubjectType type) {
+    public Set<Subject> inputSubjects(SubjectType type) {
         Set<Subject> subjectSet;
         String subjectInput;
         String description = type.getDescription();

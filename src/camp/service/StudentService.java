@@ -37,8 +37,8 @@ public class StudentService {
         student.setStatus(status);
 
         // 수강 과목 입력
-        Set<Subject> mandatoryList = subjectService.inputSubject(SubjectType.MANDATORY);
-        Set<Subject> choiceList = subjectService.inputSubject(SubjectType.CHOICE);
+        Set<Subject> mandatoryList = subjectService.inputSubjects(SubjectType.MANDATORY);
+        Set<Subject> choiceList = subjectService.inputSubjects(SubjectType.CHOICE);
 
         // 수강 과목 저장
         student.getSubjectList().addAll(mandatoryList);
