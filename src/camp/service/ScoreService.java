@@ -3,6 +3,7 @@ package camp.service;
 import camp.domain.Score;
 import camp.domain.Student;
 import camp.domain.Subject;
+import camp.domain.SubjectType;
 import camp.repository.ScoreRepository;
 
 import java.util.List;
@@ -113,6 +114,7 @@ public class ScoreService {
                 + subject.getSubjectName() + " 과목 등급 조회 성공!");
     }
 
+    // 수강생의 과목별 평균 등급 출력
     public void printAvgScore(Student student) {
         // 수강 중인 과목 목록 불러오기
         List<Subject> subjectList = student.getSubjectList();
@@ -125,6 +127,19 @@ public class ScoreService {
             System.out.println(subject.getSubjectName() + " 과목의 평균 등급 : " + avgGrade);
         }
 
+    }
+
+    // 수강생의 필수 과목 평균 등급 출력
+    public void printAvgMandatoryScore(Student student) {
+        List<Subject> subjectList = student.getSubjectList(SubjectType.MANDATORY);
+        System.out.println("\n" + student.getStudentName() + " 수강생의 필수 과목 평균 등급");
+
+        for (Subject subject : subjectList) {
+            List<Score> scoreList = scoreRepository.find(student.getStudentId(), subject.getSubjectId());
+            if (scoreList.isEmpty()) continue; // 점수가 아예 없는 경우 평균 등급 산정 x
+            Character avgGrade = getAvgGrade(subject, scoreList);
+            System.out.println(subject.getSubjectName() + " 과목의 평균 등급 : " + avgGrade);
+        }
     }
 
     // 과목 객체와 점수 리스트를 입력받아 평균 등급을 반환

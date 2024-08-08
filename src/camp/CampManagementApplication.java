@@ -1,12 +1,6 @@
 package camp;
 
-import camp.domain.*;
-import camp.repository.ScoreRepository;
-import camp.repository.StudentRepository;
-import camp.repository.SubjectRepository;
-import camp.service.ScoreService;
 import camp.service.StudentService;
-import camp.service.SubjectService;
 
 import java.util.*;
 
@@ -15,15 +9,8 @@ public class CampManagementApplication {
     // 스캐너
     private static Scanner sc = new Scanner(System.in);
 
-    // repository
-    private static SubjectRepository subjectRepository = new SubjectRepository();
-    private static StudentRepository studentRepository = new StudentRepository();
-    private static ScoreRepository scoreRepository = new ScoreRepository();
-
     // service
     private static StudentService studentService = new StudentService();
-    private static SubjectService subjectService = new SubjectService();
-    private static ScoreService scoreService = new ScoreService();
 
     public static void main(String[] args) {
         try {
@@ -106,7 +93,7 @@ public class CampManagementApplication {
                 case 2 -> studentService.updateRoundScoreBySubject(); // 수강생의 과목별 회차 점수 수정
                 case 3 -> studentService.inquireRoundGradeBySubject(); // 수강생의 특정 과목 회차별 등급 조회
                 case 4 -> studentService.inquireAvgGradeBySubject(); //수강생의 과목별 평균 등급 조회
-                case 5 -> inquireAvgGradeByStatus(); // 특정 상태 수강생들의 필수 과목 평균 등급 조회
+                case 5 -> studentService.inquireAvgGradeByStatus(); // 특정 상태 수강생들의 필수 과목 평균 등급 조회
                 case 6 -> flag = false; // 메인 화면 이동
                 default -> {
                     System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
@@ -139,47 +126,4 @@ public class CampManagementApplication {
             }
         }
     }
-
-    // 특정 상태 수강생들의 필수 과목 평균 등급 조회
-    private static void inquireAvgGradeByStatus() {
-        // 조회할 상태 입력
-        Status status;
-        while (true) {
-            System.out.print("조회할 수강생의 상태를 입력해주세요(GREEN, YELLOW, RED) : ");
-            String statusString = sc.next();
-            sc.nextLine(); // 입력 버퍼 비우기
-            try {
-                status = Status.valueOf(statusString.toUpperCase());
-                break;
-            } catch (Exception e) {
-                System.out.println("수강생의 상태는 Green, Yellow, Red 중 하나여야 합니다. 다시 입력해주세요.");
-            }
-        }
-
-        // 조회할 수강생 목록 불러오기
-        List<Student> students = studentRepository.findByStatus(status);
-
-        for (Student student : students) {
-            List<Subject> subjectList = student.getSubjectList(SubjectType.MANDATORY);
-            System.out.println("\n" + student.getStudentName() + " 수강생의 필수 과목 평균 등급");
-
-            for (Subject subject : subjectList) {
-                List<Score> scoreList = scoreRepository.find(student.getStudentId(), subject.getSubjectId());
-                if (scoreList.isEmpty()) continue; // 점수가 아예 없는 경우 평균 등급 산정 x
-                Character avgGrade = getAvgGrade(subject, scoreList);
-                System.out.println(subject.getSubjectName() + " 과목의 평균 등급 : " + avgGrade);
-            }
-        }
-
-        System.out.println(status.name() + " 상태 수강생들의 필수 과목 평균 등급 조회 성공!");
-    }
-
-    // 과목 객체와 점수 리스트를 입력받아 평균 등급을 반환
-    private static Character getAvgGrade(Subject subject, List<Score> scoreList) {
-        int scoreSum = scoreList.stream().map(Score::getScore).reduce(0, Integer::sum);
-        double avgScore = (double) scoreSum / scoreList.size();
-        return Score.decideGrade(subject.getSubjectType(), avgScore);
-    }
-
-
 }

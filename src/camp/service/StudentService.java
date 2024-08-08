@@ -192,6 +192,32 @@ public class StudentService {
         System.out.println(student.getStudentName() + " 수강생의 과목별 평균 등급 조회 성공!");
     }
 
+    // 특정 상태 수강생들의 필수 과목 평균 등급 조회
+    public void inquireAvgGradeByStatus() {
+        // 조회할 상태 입력
+        Status status;
+        while (true) {
+            System.out.print("조회할 수강생의 상태를 입력해주세요(GREEN, YELLOW, RED) : ");
+            String statusString = sc.next();
+            sc.nextLine(); // 입력 버퍼 비우기
+            try {
+                status = Status.valueOf(statusString.toUpperCase());
+                break;
+            } catch (Exception e) {
+                System.out.println("수강생의 상태는 Green, Yellow, Red 중 하나여야 합니다. 다시 입력해주세요.");
+            }
+        }
+
+        // 조회할 수강생 목록 불러오기
+        List<Student> students = studentRepository.findByStatus(status);
+
+        for (Student student : students) {
+            scoreService.printAvgMandatoryScore(student);
+        }
+
+        System.out.println(status.name() + " 상태 수강생들의 필수 과목 평균 등급 조회 성공!");
+    }
+
     // 수강생의 ID를 입력받아 수강생 객체를 반환
     public Student getStudent() {
         System.out.print("\n관리할 수강생의 번호를 입력하시오...");
