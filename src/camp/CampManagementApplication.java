@@ -105,7 +105,7 @@ public class CampManagementApplication {
                 case 1 -> studentService.createScore(); // 수강생의 과목별 시험 회차 및 점수 등록
                 case 2 -> studentService.updateRoundScoreBySubject(); // 수강생의 과목별 회차 점수 수정
                 case 3 -> studentService.inquireRoundGradeBySubject(); // 수강생의 특정 과목 회차별 등급 조회
-                case 4 -> inquireAvgGradeBySubject(); //수강생의 과목별 평균 등급 조회
+                case 4 -> studentService.inquireAvgGradeBySubject(); //수강생의 과목별 평균 등급 조회
                 case 5 -> inquireAvgGradeByStatus(); // 특정 상태 수강생들의 필수 과목 평균 등급 조회
                 case 6 -> flag = false; // 메인 화면 이동
                 default -> {
@@ -138,28 +138,6 @@ public class CampManagementApplication {
                 }
             }
         }
-    }
-
-    // 수강생의 과목별 평균 등급 조회
-    private static void inquireAvgGradeBySubject() {
-        // 조회할 수강생 입력
-        Student student = getStudent();
-
-        // 존재하지 않는 수강생 Id인 경우 종료
-        if (student == null) return;
-
-        // 수강 중인 과목 목록 불러오기
-        List<Subject> subjectList = student.getSubjectList();
-
-        for (Subject subject : subjectList) {
-            // 평균 등급 산정
-            List<Score> scoreList = scoreRepository.find(student.getStudentId(), subject.getSubjectId());
-            if (scoreList.isEmpty()) continue; // 점수가 아예 없는 경우 평균 등급 산정 x
-            Character avgGrade = getAvgGrade(subject, scoreList);
-            System.out.println(subject.getSubjectName() + " 과목의 평균 등급 : " + avgGrade);
-        }
-
-        System.out.println(student.getStudentName() + " 수강생의 과목별 평균 등급 조회 성공!");
     }
 
     // 특정 상태 수강생들의 필수 과목 평균 등급 조회
@@ -203,60 +181,5 @@ public class CampManagementApplication {
         return Score.decideGrade(subject.getSubjectType(), avgScore);
     }
 
-    // 과목 이름을 입력받아 과목 객체 반환
-    // 수강 중인 과목 이름을 입력 받을 때까지 반복
-    private static Subject inputSubject(Student student) {
-        List<Subject> subjectList = student.getSubjectList();
-        System.out.print(student.getStudentName() + " 수강생이 수강 중인 과목 : ");
-        printSubjectName(subjectList);
-
-        Subject subject;
-        while (true) {
-            System.out.print("점수를 관리할 과목을 입력해주세요 : ");
-            String subjectName = sc.nextLine();
-
-            subject = subjectRepository.findByName(subjectName);
-
-            // 과목 이름 유효성 검사
-            if (subject == null) {
-                System.out.println(subjectName + "은(는) 존재하지 않는 과목입니다. 다시 입력해주세요.");
-                continue;
-            }
-
-            // 과목 수강 여부 유효성 검사
-            if (!subjectList.contains(subject)) {
-                System.out.println(subjectName + "은(는) 수강 중인 과목이 아닙니다. 다시 입력해주세요.");
-            } else {
-                break;
-            }
-        }
-        return subject;
-    }
-
-    // 수강생의 ID를 입력받아 수강생 객체를 반환
-    private static Student getStudent() {
-        System.out.print("\n관리할 수강생의 번호를 입력하시오...");
-        String studentId = sc.next();
-        sc.nextLine(); // 버퍼 비우기
-        Student student = studentRepository.findById(studentId);
-
-        if (student == null) {
-            System.out.println("존재하지 않는 수강생 ID 입니다.");
-        }
-        return student;
-    }
-
-    // 과목 리스트를 입력 받아 과목 이름을 출력
-    private static void printSubjectName(List<Subject> subjectList) {
-        Iterator<Subject> iterator = subjectList.iterator();
-        while (iterator.hasNext()) {
-            Subject subject = iterator.next();
-            System.out.print(subject.getSubjectName());
-            if (iterator.hasNext()) {
-                System.out.print(", ");
-            }
-        }
-        System.out.println();
-    }
 
 }

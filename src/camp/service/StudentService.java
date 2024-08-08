@@ -178,6 +178,20 @@ public class StudentService {
         scoreService.printScore(student, subject);
     }
 
+    // 수강생의 과목별 평균 등급 조회
+    public void inquireAvgGradeBySubject() {
+        // 조회할 수강생 입력
+        Student student = getStudent();
+
+        // 존재하지 않는 수강생 Id인 경우 종료
+        if (student == null) return;
+
+        // 수강 중인 과목의 평균 등급 출력
+        scoreService.printAvgScore(student);
+
+        System.out.println(student.getStudentName() + " 수강생의 과목별 평균 등급 조회 성공!");
+    }
+
     // 수강생의 ID를 입력받아 수강생 객체를 반환
     public Student getStudent() {
         System.out.print("\n관리할 수강생의 번호를 입력하시오...");

@@ -112,4 +112,25 @@ public class ScoreService {
         System.out.println(student.getStudentName() + " 수강생의 "
                 + subject.getSubjectName() + " 과목 등급 조회 성공!");
     }
+
+    public void printAvgScore(Student student) {
+        // 수강 중인 과목 목록 불러오기
+        List<Subject> subjectList = student.getSubjectList();
+
+        for (Subject subject : subjectList) {
+            // 평균 등급 산정
+            List<Score> scoreList = scoreRepository.find(student.getStudentId(), subject.getSubjectId());
+            if (scoreList.isEmpty()) continue; // 점수가 아예 없는 경우 평균 등급 산정 x
+            Character avgGrade = getAvgGrade(subject, scoreList);
+            System.out.println(subject.getSubjectName() + " 과목의 평균 등급 : " + avgGrade);
+        }
+
+    }
+
+    // 과목 객체와 점수 리스트를 입력받아 평균 등급을 반환
+    public Character getAvgGrade(Subject subject, List<Score> scoreList) {
+        int scoreSum = scoreList.stream().map(Score::getScore).reduce(0, Integer::sum);
+        double avgScore = (double) scoreSum / scoreList.size();
+        return Score.decideGrade(subject.getSubjectType(), avgScore);
+    }
 }
